@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="Eine universelle Web Application Firewall">
+		<meta name="author" content="Hendrik Buchwald">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<title>Shadow Daemon - OWASP Ruhrpott</title>
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/blue.css" id="theme">
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background="imgs/header.jpg">
+					<h1>Shadow Daemon</h1>
+					<h3>Web Application Firewall</h3>
+					<p>
+						<small>Von Hendrik Buchwald</small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Warum?</h2>
+					<section></section>
+					<section data-background="imgs/defacement.png"></section>
+					<section>
+						<table>
+							<thead>
+								<tr>
+									<th>CVE</th>
+									<th>Typ</th>
+									<th>Datum</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>CVE-2014-9036</td>
+									<td>XSS</td>
+									<td>2014-11-25</td>
+								</tr>
+								<tr>
+									<td>CVE-2014-9035</td>
+									<td>XSS</td>
+									<td>2014-11-25</td>
+								</tr>
+								<tr>
+									<td>CVE-2014-9034</td>
+									<td>DOS</td>
+									<td>2014-11-25</td>
+								</tr>
+								<tr>
+									<td>...</td>
+									<td>...</td>
+									<td>...</td>
+								</tr>
+								<tr>
+									<td>CVE-2014-5203</td>
+									<td>Code Exec</td>
+									<td>2014-08-18</td>
+								</tr>
+							</tbody>
+						</table>
+						<h4>Schwachstellen in Wordpress (<a href="http://www.cvedetails.com/product/4096/Wordpress-Wordpress.html?vendor_id=2337">cvedetails.com</a>)</h4>
+					</section>
+					<section>
+						<table>
+							<thead>
+								<tr>
+									<th>CVE</th>
+									<th>Typ</th>
+									<th>Datum</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>CVE-2014-8630</td>
+									<td>Code Exec</td>
+									<td>2015-02-01</td>
+								</tr>
+								<tr>
+									<td>CVE-2014-1573</td>
+									<td>XSS</td>
+									<td>2014-10-12</td>
+								</tr>
+								<tr>
+									<td>CVE-2014-1572</td>
+									<td>Bypass</td>
+									<td>2014-10-12</td>
+								</tr>
+								<tr>
+									<td>CVE-2014-1571</td>
+									<td>Info.</td>
+									<td>2014-10-12</td>
+								</tr>
+								<tr>
+									<td>CVE-2014-1546</td>
+									<td>CSRF</td>
+									<td>2014-08-14</td>
+								</tr>
+							</tbody>
+						</table>
+						<h4>Schwachstellen in Bugzilla (<a href="http://www.cvedetails.com/product/785/Mozilla-Bugzilla.html?vendor_id=452">cvedetails.com</a>)</h4>
+					</section>
+					<section>
+						<img src="imgs/bugzilla.png" />
+						<h4>Schwachstellen in Bugzilla (<a href="http://www.cvedetails.com/product/785/Mozilla-Bugzilla.html?vendor_id=452">cvedetails.com</a>)</h4>
+					</section>
+					<section>
+						<p>Schutzsysteme vorhanden (<i>Web Application Firewalls</i>), Resultate allerdings nicht immer zufriedenstellend
+					</section>
+				</section>
+
+				<section>
+					<h2>Architektur</h2>
+					<section>
+						<img src="imgs/architektur1.png" width="50%" class="diagram" />
+						<h4>Diagramm 2.1: Vereinfachter Aufbau</h4>
+					</section>
+					<section>
+						<img src="imgs/architektur2.png" width="48%" class="diagram" />
+						<h4>Diagramm 2.2: Detaillierter Aufbau</h4>
+					</section>
+					<section>
+						<ul>
+							<li>Identische Benutzereingaben</li>
+							<li>Leicht erweiterbar durch Module</li>
+							<li>Hohe Sicherheit durch Abkapselung</li>
+							<li>Keine Programmierkenntnisse erforderlich</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h2>Analyse</h2>
+					<section>
+						<img src="imgs/blacklist.png" width="62%" class="diagram" />
+						<h4>Diagramm 3.1: Algorithmus der Blacklist</h4>
+					</section>
+					<section>
+						<ul>
+							<li>Schwellwert und Regeln erlauben perfekte Anpassung an Umgebung</li>
+							<li>Gute Erkennung von komplexen Angriffen</li>
+							<li>Minimaler Konfigurationsaufwand</li>
+							<li>Erkennt bekannte Techniken sehr gut, unbekannte Techniken allerdings gar nicht</li>
+						</ul>
+					</section>
+					<section>
+						<img src="imgs/whitelist.png" width="62%" class="diagram" />
+						<h4>Diagramm 3.2: Algorithmus der Whitelist</h4>
+					</section>
+					<section>
+						<ul>
+							<li>Erkennt selbst minimalste Abweichungen in Benutzereingaben</li>
+							<li>Verhindert Zugriff auf versteckte Backdoors</li>
+							<li>Nicht nutzbar für direkte Benutzereingaben</li>
+							<li>Regelmanagement aufwändig, allerdings existieren Hilfsmittel</li>
+						</ul>
+					</section>
+				</section>
+
+				<section data-background="imgs/interface.png">
+					<h2><a href="https://demo.shadowd.zecure.org/" target="_blank" style="background:rgba(255,255,255,0.5);padding:5px;">Verwaltung</a></h2>
+				</section>
+
+				<section>
+					<h2>Vergleich: mod_security</h2>
+					<section>
+						<ul>
+							<li>Unabhängig von der Webapplikation, dafür Webservergebunden</li>
+							<li>Überwacht Zugriff auf statische und dynamische Ressourcen und HTTP Protokoll</li>
+							<li>Parsed Benutzereingaben (Querystring, Cookies, Multipart...) selbstständig</li>
+							<li>Problem: Webapplikation kann Eingaben anders interpretieren</li>
+						</ul>
+					</section>
+					<section>
+						<blockquote cite="http://www.securitytracker.com/id/1027706">
+							&ldquo;A remote user can send a specially crafted multipart request that begins with an invalid part to bypass mod_security evaluation.&rdquo;
+						</blockquote>
+					</section>
+					<section>
+						<blockquote cite="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-1359">
+							&ldquo;Interpretation conflict in ModSecurity (mod_security) 2.1.0 and earlier allows remote attackers to bypass request rules via application/x-www-form-urlencoded POST data that contains an ASCIIZ (0x00) byte, which mod_security treats as a terminator even though it is still processed as normal data by some HTTP parsers including PHP 5.2.0, and possibly parsers in Perl, and Python.&rdquo;
+						</blockquote>
+					</section>
+					<section>
+						<ul>
+							<li>Blacklist zur Erkennung von Angriffen</li>
+							<li>Ähnliche Funktionsweise und Signaturen</li>
+							<li>Mächtige Regeln, allerdings aufwändig anzupassen</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h2>Informationen</h2>
+					<ul>
+						<li><a href="https://zecure.org/">https://zecure.org/</a></li>
+						<li><a href="https://github.com/zecure">https://github.com/zecure</a></li>
+						<li>Hendrik Buchwald &lt;<a href="mailto:hb@zecure.org">hb@zecure.org</a>&gt;</li>
+					</ul>
+				</section>
+
+				<section data-background="imgs/header.jpg">
+					<h2>Ende</h2>
+				</section>
+			</div>
+		</div>
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+		<script>
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				transition: 'slide',
+
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

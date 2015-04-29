@@ -1,0 +1,47 @@
+wget https://shadowd.zecure.org/files/debian/shadowd_1.1.0-1_amd64.deb
+su
+cd /tmp
+dpkg -i shadowd_1.1.0-1_amd64.deb
+apt-get -f install
+apt-get install postgresql
+su postgres
+createuser -P shadowd
+createdb -O shadowd shadowd
+exit
+psql -Ushadowd -h127.0.0.1 < /usr/share/shadowd/pgsql_layout.sql
+vim /etc/shadowd/shadowd.ini
+service shadowd restart
+apt-get install curl apache2 libapache2-mod-php5 php5-cli php5-cgi php5-pgsql php5-gd
+exit
+cd /tmp
+wget https://shadowd.zecure.org/files/shadowd_ui-1.1.0.tar.gz
+tar -xvf shadowd_ui-1.1.0.tar.gz
+cd shadowd_ui-1.1.0
+curl -s https://getcomposer.org/installer | php
+php composer.phar install
+php app/console swd:register --env=prod --admin --name=admin
+su
+mv shadowd_ui-1.1.0 /var/www/shadowd_ui
+chown -R www-data:www-data /var/www/shadowd_ui/app/{logs,cache}
+a2enmod rewrite
+wget https://github.com/sebsauvage/ZeroBin/archive/master.zip
+unzip -e master.zip
+mv ZeroBin-master /var/www/zerobin
+chown -R www-data:www-data /var/www/zerobin
+vim /etc/hosts #shadowd_ui #zerobin
+cd /etc/apache2/sites-enabled/
+cp -p ../sites-available/default shadowd_ui
+vim shadowd_ui #ServerName shadowd_ui #rm: AllowOverride
+cp -p shadowd_ui zerobin
+vim zerobin #ServerName zerobin
+service apache2 restart
+wget https://shadowd.zecure.org/files/shadowd_php-1.0.0.tar.gz
+tar -xvf shadowd_php-1.0.0.tar.gz
+mv shadowd_php-1.0.0/src/* /usr/share/shadowd/
+mv shadowd_php-1.0.0/misc/examples/connectors.ini /etc/shadowd/
+chmod 640 /etc/shadowd/connectors.ini
+chown root:www-data /etc/shadowd/connectors.ini
+vim /etc/shadowd/connectors.ini #profile #key #observe
+vim /etc/apache2/sites-enabled/zerobin
+service apache2 restart
+vim /etc/shadowd/connectors.ini #observe

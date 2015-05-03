@@ -20,6 +20,7 @@ curl -s https://getcomposer.org/installer | php
 php composer.phar install
 php app/console swd:register --env=prod --admin --name=admin
 su
+cd ..
 mv shadowd_ui-1.1.0 /var/www/shadowd_ui
 chown -R www-data:www-data /var/www/shadowd_ui/app/{logs,cache}
 a2enmod rewrite
